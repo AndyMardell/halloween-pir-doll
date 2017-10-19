@@ -4,23 +4,32 @@
 //-----------------------------------------------------------------
 
 #include <Servo.h>
+#include <SoftwareSerial.h>
+#include <DFRobotDFPlayerMini.h>
 
 //-----------------------------------------------------------------
 //  Setup Servo
 //-----------------------------------------------------------------
 
 Servo headservo;
+int servoPin = 9;
+int pos = 0; // Servo Position
+
+//-----------------------------------------------------------------
+//  Setup DfPlayer
+//-----------------------------------------------------------------
+
+SoftwareSerial softwareSerial(10, 11); // RX, TX
+DFRobotDFPlayerMini dfplayer;
+int totalTracks = 5; // Total number of tracks on player
 
 //---------------------------------------
-// Declare Vars
+// Declare Other Vars
 //---------------------------------------
 
 int pirPin = 2;
 int pirState = LOW;
 int pirStatus = 0;
-
-int servoPin = 9;
-int pos = 0; // Servo Position
 
 int pauseTime = 5000;
 int triggered = 0; // Times triggered
@@ -31,14 +40,30 @@ int triggered = 0; // Times triggered
 
 void setup() {
 
+  // Setup Software Serial for DfPlayer
+  softwareSerial.begin(9600);
+
+  // Setup Serial
+  Serial.begin(115200);
+
   // Declare PIR as input
   pinMode(pirPin, INPUT);
 
   // Attach servo
   headservo.attach(servoPin);
- 
-  // Setup Serial
-  Serial.begin(9600);
+
+  // Check softwareSerial can communicate with mp3.
+  if (!dfplayer.begin(softwareSerial)) {
+    Serial.println(F("Unable to begin:"));
+    Serial.println(F("1.Please recheck the connection"));
+    Serial.println(F("2.Please insert the SD card"));
+    while(true);
+  }
+  Serial.println(F("DFPlayer online"));
+
+  // Set volume to 10
+  dfplayer.volume(10);
+
 }
 
 //---------------------------------------
@@ -62,6 +87,9 @@ void loop(){
       // Change state to high (sensing motion)
       pirState = HIGH;
     }
+
+    // Play sound
+    playTrack(totalTracks);
 
     // If triggered 5 times
     if (triggered > 5) {
@@ -138,4 +166,20 @@ void twitch(int currentPos) {
 
 }
 
+//-----------------------------------------------------------------
+//  Play Random Sound
+//-----------------------------------------------------------------
 
+void playTrack(int tracks) {
+
+  // random() is exclusive of max number. 
+  // 10 would be 1-9, we want it 1-10, so add 1
+  int max = tracks + 1;
+
+  // Get number between 0 and max
+  int val = random(1, max);
+
+  // Play random track
+  dfplayer.play(val);
+
+}
