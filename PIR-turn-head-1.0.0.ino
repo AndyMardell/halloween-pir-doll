@@ -22,6 +22,8 @@ int pirStatus = 0;
 int servoPin = 9;
 int pos = 0; // Servo Position
 
+int pauseTime = 5000;
+
 //---------------------------------------
 // Setup
 //---------------------------------------
@@ -52,7 +54,7 @@ void loop(){
     
     // If state is set to low
     if (pirState == LOW) {
-      Serial.println("Motion detected!");
+      Serial.println("Motion detected");
       // Change state to high (sensing motion)
       pirState = HIGH;
     }
@@ -60,8 +62,8 @@ void loop(){
     // Move Head
     moveHead();
 
-    // Don't trigger again for a few seconds
-    delay(5000);
+    // Don't trigger again for pauseTime
+    delay(pauseTime);
 
   // If PIR is not sensing motion
   } else {
@@ -70,7 +72,7 @@ void loop(){
 
     // If state is set to high
     if (pirState == HIGH){
-      Serial.println("Motion ended!");
+      Serial.println("Motion ended");
       // Change state to low
       pirState = LOW;
     }
