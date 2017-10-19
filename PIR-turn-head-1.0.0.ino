@@ -93,10 +93,32 @@ void moveHead() {
     delay(15);
   }
 
+  // Twitch
+  twitch();
+
   // Move head back
   for (pos = 90; pos >= 0; pos -= 1) {
     headservo.write(pos);
     delay(15);
+  }
+
+}
+
+//-----------------------------------------------------------------
+//  Twitch
+//-----------------------------------------------------------------
+
+void twitch() {
+
+  // Twitch back slow
+  for (pos = 90; pos >= 85; pos -= 1) {
+    headservo.write(pos);
+    delay(15);
+  }
+  // Twitch forward fast
+  for (pos = 85; pos <= 90; pos += 1) {
+    headservo.write(pos);
+    delay(2);
   }
 
 }
