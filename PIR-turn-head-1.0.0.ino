@@ -59,8 +59,8 @@ void loop(){
       pirState = HIGH;
     }
 
-    // Move Head
-    moveHead();
+    // moveHead(position, speed)
+    moveHead(90, 15);
 
     // Don't trigger again for pauseTime
     delay(pauseTime);
@@ -85,21 +85,21 @@ void loop(){
 //  Move Head
 //-----------------------------------------------------------------
 
-void moveHead() {
+void moveHead(int rotateTo, int speed) {
 
-  // Move head 90º right in 1º steps
-  for (pos = 0; pos <= 90; pos += 1) {
+  // Move head to rotateTo in 1º steps
+  for (pos = 0; pos <= rotateTo; pos += 1) {
     headservo.write(pos);
-    delay(15);
+    delay(speed);
   }
 
   // Twitch
-  twitch();
+  twitch(rotateTo);
 
   // Move head back
-  for (pos = 90; pos >= 0; pos -= 1) {
+  for (pos = rotateTo; pos >= 0; pos -= 1) {
     headservo.write(pos);
-    delay(15);
+    delay(speed);
   }
 
 }
@@ -108,17 +108,22 @@ void moveHead() {
 //  Twitch
 //-----------------------------------------------------------------
 
-void twitch() {
+void twitch(int currentPos) {
+
+  // Set twitchpos as 5º less than current position
+  int twitchPos = currentPos - 5;
 
   // Twitch back slow
-  for (pos = 90; pos >= 85; pos -= 1) {
+  for (pos = currentPos; pos >= twitchPos; pos -= 1) {
     headservo.write(pos);
     delay(15);
   }
   // Twitch forward fast
-  for (pos = 85; pos <= 90; pos += 1) {
+  for (pos = twitchPos; pos <= currentPos; pos += 1) {
     headservo.write(pos);
     delay(2);
   }
 
 }
+
+
