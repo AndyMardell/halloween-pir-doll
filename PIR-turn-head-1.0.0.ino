@@ -60,6 +60,9 @@ void loop(){
     // Move Head
     moveHead();
 
+    // Don't trigger again for a few seconds
+    delay(5000);
+
   // If PIR is not sensing motion
   } else {
 
@@ -93,8 +96,5 @@ void moveHead() {
     headservo.write(pos);
     delay(15);
   }
-
-  // Don't trigger again for a few seconds
-  delay(5000);
 
 }
