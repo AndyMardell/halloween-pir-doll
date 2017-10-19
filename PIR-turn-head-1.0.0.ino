@@ -23,6 +23,7 @@ int servoPin = 9;
 int pos = 0; // Servo Position
 
 int pauseTime = 5000;
+int triggered = 0; // Times triggered
 
 //---------------------------------------
 // Setup
@@ -59,8 +60,16 @@ void loop(){
       pirState = HIGH;
     }
 
-    // moveHead(position, speed)
-    moveHead(90, 15);
+    // If triggered 5 times
+    if (triggered > 5) {
+      // Move head 180º, fast
+      moveHead(180, 5);
+      // Reset count
+      triggered = 0;
+    } else {
+      // Move head 90º, slow
+      moveHead(90, 15);
+    }
 
     // Don't trigger again for pauseTime
     delay(pauseTime);
@@ -96,7 +105,7 @@ void moveHead(int rotateTo, int speed) {
   // Twitch
   twitch(rotateTo);
 
-  // Move head back
+  // Move head back to 0
   for (pos = rotateTo; pos >= 0; pos -= 1) {
     headservo.write(pos);
     delay(speed);
