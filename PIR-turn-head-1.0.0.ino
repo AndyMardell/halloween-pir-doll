@@ -53,6 +53,9 @@ void loop(){
   // If PIR is sensing motion
   if (pirStatus == HIGH) {
     
+    // Increment triggered
+    triggered++;
+
     // If state is set to low
     if (pirState == LOW) {
       Serial.println("Motion detected");
